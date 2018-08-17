@@ -1,0 +1,245 @@
+.root_wraper{
+	width:100%;
+	height:100%;
+	background:#eaeced;
+}
+
+a:link,
+a:hover,
+a:active,
+a:visited{
+	text-decoration: none;
+}
+
+/*头部*/
+.phead{
+	width:100%;
+	min-width: 1300px;
+	height:70px;
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:999;
+}
+.head_con{
+    height:70px;
+    background:url(../../assets/images/head_bg.jpg) repeat-x center center;
+    background-size:cover;
+    box-shadow: 0 0 1px 1px #383838;
+}
+.head_con .left{
+    height:100%;
+    float:left;
+    overflow: hidden;
+}
+.head_con .left span{
+    display:block;
+    height:100%;
+    width: 200px;
+    float: left;
+    background:url(../../assets/images/logo.png) no-repeat center center;
+    background-size:auto 46px;
+}
+.head_con .left b{
+	display: block;
+	float: left;
+	font-size:20px;
+	color:#fff;
+    font-weight: normal;
+	margin-left: 20px;
+	line-height: 70px;
+}
+.head_con .right{
+    float:right;
+    height:70px;
+    line-height:70px;
+    padding-right:30px;
+}
+.head_con .right span{
+    font-size:14px;
+    color:#fff;
+    font-weight:200;
+    padding:0 10px;
+    background:url(../../assets/images/head_icon_06.png) no-repeat right center;
+    cursor: pointer;
+}
+.head_con .right span small{
+    font-size:14px;
+    color:#fff;
+    font-weight:200;
+}
+
+.head_con .right span.exit{
+	background:none;
+}
+.head_con .right span.exit small{
+    padding-right:20px;
+    background:url('../../assets/images/head_icon_12.png') no-repeat right center;
+}
+/*侧边栏*/
+.psidebar{
+    width:200px;
+    height:100%;
+    background:#3d4851;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:99;
+}
+.psidebarinner{
+    padding-top:70px;
+}
+.sidebar_list{
+    background:#3d4851;
+}
+.sidebar_list ul{
+	margin-bottom: 0;
+	padding:0;
+}
+.sidebar_list ul li a{
+    display: block;
+    padding-left:12px;
+    color:#728798;
+    cursor: pointer;
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.sidebar_list ul li.active a{
+    background:#58646d url('../../assets/images/sidebarline.jpg') repeat-y left center;
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.sidebar_list ul li a span{
+    display: block;
+    font-size:14px;
+    height:46px;
+    line-height:46px;
+    padding-left: 40px;
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.sidebar_list ul li.active a span{
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.sidebar_list ul li.num_01 a span{
+    background:url(../../assets/images/sidebar_icon_default_01.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_02 a span{
+    background:url(../../assets/images/sidebar_icon_default_02.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_03 a span{
+    background:url(../../assets/images/sidebar_icon_default_03.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_04 a span{
+    background:url(../../assets/images/sidebar_icon_default_04.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_05 a span{
+    background:url(../../assets/images/sidebar_icon_default_05.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_06 a span{
+    background:url(../../assets/images/sidebar_icon_default_06.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_01.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_01.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_02.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_02.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_03.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_03.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_04.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_04.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_05.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_05.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.num_06.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_06.png) no-repeat left center;
+    background-size: auto 30px;
+}
+
+/*表格、查询、显示区*/
+.pmain_con{
+    width:100%;
+    min-width: 1300px;
+    height:100%;
+    position:absolute;
+    background:#eaeced;
+    overflow: auto;
+    top:0;
+    left:0;
+    z-index: 9;
+}
+.pmainconinner{
+    padding-top:70px;
+    padding-left:200px;
+}
+/*search*/
+.pmainconinner .search{
+    background:#fff;
+    border-bottom: 1px solid #dbd9d9;
+    padding:10px 20px;
+}
+.pmainconinner .search:after{
+    content:' ';
+    display: block;
+    clear:both;
+}
+.pmainconinner .pmain_show{
+    margin:10px;
+    padding:10px;
+    background:#fff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+}
+.pmainconinner .pmain_show .common_area{}
+.pmainconinner .pmain_show .common_area .table_title{
+    overflow: hidden;
+    padding:5px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ededed;
+}
+.pmainconinner .pmain_show .common_area .table_title span.title_txt{
+    padding-left: 10px;
+    line-height: 32px;
+    font-size:16px;
+    position: relative;
+}
+
+.pmainconinner .pmain_show .common_area .table_title span.title_txt:after{
+    content:"";
+    display: block;
+    width: 3px;
+    height: 16px;
+    background:#40a9ff;
+    position: absolute;
+    top: 50%;
+    margin-top:-8px;
+    left:0;
+}
