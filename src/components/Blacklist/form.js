@@ -1,9 +1,8 @@
 import React,{Component} from 'react';
-import { Row, Col, Form, Input, Button, DatePicker, Select, Radio } from 'antd';
+import { Row, Col, Form, Input, Button, DatePicker, Select } from 'antd';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
 
 class Searchform extends Component{
@@ -14,10 +13,10 @@ class Searchform extends Component{
     			<Row>
     				<Col span={24}>
 	    				<FormItem label="电话号码">
-				            {getFieldDecorator('phonenum',{
+				            {getFieldDecorator('phone',{
 				            	rules : [{
-				            		require: true,
-				            		message: '手机号码格式有待商榷哟!'
+				            		required: true,
+				            		message: '手机号码不能为空'
 				            	}]
 				            })(
 				              <Input type="text" placeholder="请输入电话号码" style={{width:200}} />
@@ -31,7 +30,7 @@ class Searchform extends Component{
 				            )}
 				        </FormItem>
 				        <FormItem label="机构名称">
-				        	{getFieldDecorator('organizations',{
+				        	{getFieldDecorator('orgName',{
 				            	rules : [/*{required: true, message: '请选择机构名称!'}*/]
 				            })(
 				                <Select placeholder="请选择机构名称" style={{ width: 200 }}>

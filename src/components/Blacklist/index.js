@@ -12,10 +12,14 @@ class Blacklist extends Component{
 
 	handleFormSubmit = (e) => {
 		e.preventDefault();
-		var formValue = this.formRef.props.form.getFieldsValue();
-		this.setState({ 
-			formValue:formValue
-		});
+		//var formValue = this.formRef.props.form.getFieldsValue();
+		this.formRef.props.form.validateFields((err, values) => {
+			if (!err) {
+				this.setState({ 
+					formValue:values
+				});
+			}
+	    });
 	}
 
 
