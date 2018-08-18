@@ -1,11 +1,17 @@
 import React,{Component} from 'react';
 
-const username = sessionStorage.getItem("username");
+
 
 class Header extends Component{
 	state = {
-		username
+		username : "管理员"
 	}
+
+	componentDidMount(){
+		let username = sessionStorage.getItem("username");
+		this.setState({ username });
+	}
+
 	render() {
 		return (
 			<div className="phead">
