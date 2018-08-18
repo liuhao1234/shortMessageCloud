@@ -2,7 +2,6 @@ import React,{Component,Fragment} from 'react';
 import { Button, Icon } from 'antd';
 import Form from './form.js';
 import Datatable from './table.js';
-import Poppanel from '../Poppanel';
 import './index.css';
 
 class Blacklist extends Component{
@@ -43,9 +42,7 @@ class Blacklist extends Component{
 						</div>
 					</div>
 				</div>
-				<Poppanel title="黑名单列表">
-					
-				</Poppanel>
+				
 			</Fragment>
 		)
 	}

@@ -15,24 +15,20 @@ class Searchform extends Component{
 	    				<FormItem label="电话号码">
 				            {getFieldDecorator('phone',{
 				            	rules : [{
-				            		required: true,
-				            		message: '手机号码不能为空'
+				            		pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
+				            		message: '电话号码格式错误！'
 				            	}]
 				            })(
 				              <Input type="text" placeholder="请输入电话号码" style={{width:200}} />
 				            )}
 				        </FormItem>
 				        <FormItem label="加黑时间">
-				        	{getFieldDecorator('Rangetime',{
-				            	rules : [/*{required: true, message: '请选择加黑时间!'}*/]
-				            })(
+				        	{getFieldDecorator('Rangetime')(
 				              <RangePicker />
 				            )}
 				        </FormItem>
 				        <FormItem label="机构名称">
-				        	{getFieldDecorator('orgName',{
-				            	rules : [/*{required: true, message: '请选择机构名称!'}*/]
-				            })(
+				        	{getFieldDecorator('orgName')(
 				                <Select placeholder="请选择机构名称" style={{ width: 200 }}>
 									<Option value="全部">全部</Option>
 									<Option value="北京资采">北京资采</Option>

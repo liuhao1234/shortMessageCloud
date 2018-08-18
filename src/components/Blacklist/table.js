@@ -1,41 +1,67 @@
-import React,{Component,Fragment} from 'react';
+import React,{ Component,Fragment } from 'react';
 import Axios from '../../axios/index';
-import { Table, Icon } from 'antd';
+import { Table, Icon, Modal, message } from 'antd';
 
-const columns = [{ //列数据
-	title: '电话号码',
-	align:'center',
-	dataIndex: 'phoneNum',
-}, {
-	title: '机构名称',
-	align:'center',
-	dataIndex: 'companyName',
-}, {
-	title: '创建时间',
-	align:'center',
-	dataIndex: 'createTime',
-}, {
-	title: '加黑类型',
-	align:'center',
-	dataIndex: 'blackType',
-}, {
-	title: '操作',
-	align:'center',
-	dataIndex: 'action',
-	render: (text, record) => (
-			<Fragment>
-				<Icon type="edit" style={{fontSize:18,color:'green'}} />
-				<Icon type="delete" style={{fontSize:18,color:'red'}} />
-			</Fragment>
-	)
-}]
+const { confirm } = Modal
 
 class Datatable extends Component{
+	constructor(props){
+		super(props);
+		this.columns = [{ //列数据
+			title: '电话号码',
+			align:'center',
+			dataIndex: 'phone',
+		}, {
+			title: '机构名称',
+			align:'center',
+			dataIndex: 'orgName',
+		}, {
+			title: '创建时间',
+			align:'center',
+			dataIndex: 'createTime',
+		}, {
+			title: '加黑类型',
+			align:'center',
+			dataIndex: 'blacklistType',
+		}, {
+			title: '操作',
+			align:'center',
+			dataIndex: 'action',
+			render: (text, record) => (
+					<Fragment>
+						<Icon className="table-btn" type='edit' style={{color:'green'}} />
+						<Icon className="table-btn" type='delete' onClick={this.handleDelete.bind(this,record)} style={{color:'red'}} />
+					</Fragment>
+			)
+		}]
+	}
+
 	state = {
 		dataSource : [],
 		loading : false,
 		pagination : {},
 		formValue:{}
+	}
+
+	handleDelete = (record) => {
+		confirm({
+		    title: '确定删除该条信息吗?',
+		    content: `电话号码为:${record.phone},该信息删除后将不能恢复!`,
+		    onOk() {
+		      	Axios.ajax({
+		    		url:'/blacklist/deleteBlacklist',
+		    		data:{
+						...record
+		    		}
+		    	}).then((res)=>{
+		    		if(res.code === 200){
+						message.success(res.message);
+		    		}else{
+		    			message.error(res.message);
+		    		}
+		    	})
+		    }
+		});
 	}
 
 	handleTableChange = (pagination) => {
@@ -47,10 +73,10 @@ class Datatable extends Component{
 
     getTableData(params){
     	this.setState({ loading: true });
-    	/*console.log({
+    	console.log({
     			...params,
     			...this.state.formValue
-    		})*/
+    		})
     	Axios.ajax({
     		url:'/blacklist/queryBlacklist',
     		data:{
@@ -58,7 +84,7 @@ class Datatable extends Component{
     			...this.state.formValue
     		}
     	}).then((res)=>{
-    		//console.log(res)
+    		console.log(res)
     		const   pagination = { 
     					...this.state.pagination,
 		    			total : res.data.recordsTotal
@@ -68,10 +94,10 @@ class Datatable extends Component{
     			dataSource:res.data.data.map((item)=>{
     				return {
     					key:item.blacklistId,
-    					phoneNum:item.phone,
-    					companyName:item.orgName,
+    					phone:item.phone,
+    					orgName:item.orgName,
     					createTime:item.createTime,
-    					blackType:item.blacklistType
+    					blacklistType:item.blacklistType
     				}
     			}),
     			pagination
@@ -101,7 +127,7 @@ class Datatable extends Component{
 		return (
 			<Fragment>
 				<Table 
-					columns={columns} 
+					columns={this.columns} 
 					dataSource={this.state.dataSource} 
 					pagination={this.state.pagination} 
 					size="small" 

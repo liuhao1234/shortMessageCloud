@@ -1,6 +1,6 @@
 export default class Utils {
 	static logOut(_this){
-		sessionStorage.removeItem("beautifulGirl");
+		console.log(_this)
 		_this.props.history.push('/login');
 	}
 }

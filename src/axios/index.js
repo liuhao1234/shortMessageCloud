@@ -8,8 +8,8 @@ message.config({
 //Utils.logOut();
 export default class Axios {
 	static ajax(options){
-		const baseURL = "http://192.168.100.10:9696";
-		//const baseURL = " https://www.easy-mock.com/mock/5b73e7f8a364536777acd8c2";
+		//const baseURL = "http://192.168.100.10:9696";
+		const baseURL = " https://www.easy-mock.com/mock/5b73e7f8a364536777acd8c2";
 		const token = sessionStorage.getItem("beautifulGirl");
 
 		return new Promise((resolve,reject)=>{

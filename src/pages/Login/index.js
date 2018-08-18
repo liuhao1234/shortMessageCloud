@@ -8,6 +8,8 @@ import './index.css';
 class Login extends Component {
   constructor(props) {
     super(props);
+    sessionStorage.removeItem("beautifulGirl");
+    sessionStorage.removeItem("username");
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleUserChange = this.handleUserChange.bind(this);
     this.handlePassChange = this.handlePassChange.bind(this);
@@ -46,8 +48,9 @@ class Login extends Component {
 
     //向后台发送请求
     _this.setState({ loading:true });
-
-    axios.post('http://192.168.100.10:9696/login',{
+    //http://192.168.100.10:9696
+    //https://www.easy-mock.com/mock/5b73e7f8a364536777acd8c2
+    axios.post('https://www.easy-mock.com/mock/5b73e7f8a364536777acd8c2/login',{
       'loginCode':this.state.username,
       'password':this.state.password
     }).then(function(response){
@@ -58,6 +61,8 @@ class Login extends Component {
           //登录成功
           message.success(res.message);
           sessionStorage.setItem("beautifulGirl",res.token);
+          sessionStorage.setItem("username",_this.state.username);
+          console.log(_this)
           _this.props.history.push('/home');
         }else{
           //登录失败
