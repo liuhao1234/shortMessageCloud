@@ -1,5 +1,5 @@
-import React,{Component} from 'react';
-import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
+import React,{ Component } from 'react';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { LocaleProvider } from 'antd';
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import 'moment/locale/zh-cn';

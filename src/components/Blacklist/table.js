@@ -73,10 +73,10 @@ class Datatable extends Component{
 
     getTableData(params){
     	this.setState({ loading: true });
-    	console.log({
+    	/*console.log({
     			...params,
     			...this.state.formValue
-    		})
+    		})*/
     	Axios.ajax({
     		url:'/blacklist/queryBlacklist',
     		data:{
@@ -84,7 +84,7 @@ class Datatable extends Component{
     			...this.state.formValue
     		}
     	}).then((res)=>{
-    		console.log(res)
+    		//console.log(res)
     		const   pagination = { 
     					...this.state.pagination,
 		    			total : res.data.recordsTotal
@@ -106,6 +106,7 @@ class Datatable extends Component{
     }
 
     componentWillReceiveProps(nextProps){
+    	console.log(nextProps)
     	this.setState({
     		formValue:nextProps.formValue
     	},()=>{
@@ -124,6 +125,7 @@ class Datatable extends Component{
     }
 
 	render(){
+		console.log("table被渲染")
 		return (
 			<Fragment>
 				<Table 

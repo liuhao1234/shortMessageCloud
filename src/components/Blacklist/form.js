@@ -7,6 +7,7 @@ const FormItem = Form.Item;
 
 class Searchform extends Component{
 	render(){
+		console.log("查询表单被渲染")
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<Form hideRequiredMark={true} onSubmit={this.props.handleSubmit} layout="inline" className="search-form">

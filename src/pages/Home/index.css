@@ -243,3 +243,16 @@ a:visited{
     margin-top:-8px;
     left:0;
 }
+
+/* antdesign reset */
+.ant-modal-header{
+    padding:10px 24px;
+    background:url(../../assets/images/panel_head_bg.png) no-repeat center center;
+    background-size: cover;
+}
+.ant-modal-header .ant-modal-title{
+    color:#fff;
+}
+.ant-modal-footer {
+    padding: 2px 16px;
+}
