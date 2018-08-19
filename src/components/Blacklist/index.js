@@ -42,6 +42,17 @@ class Blacklist extends Component{
 	    });
 	}
 
+	handleEdit = (record)=>{
+		console.log(record)
+		console.log(this)
+		console.log(this.modalformRef)
+		this.modalformRef.props.form.setFieldsValue(record)
+		this.setState({ 
+			modalTitle:"编辑黑名单",
+			modalShow:true
+		})
+	}
+
 	render() {
 		return (
 			<Fragment>
@@ -56,7 +67,7 @@ class Blacklist extends Component{
 									<span className="title_txt">黑名单列表</span>
 									<Button type="primary" onClick={this.setModalVisible.bind(this,true,"添加黑名单")} style={{float:'right'}}><Icon type="plus" />添加黑名单</Button>
 								</div>
-								<Datatable formValue={this.state.formValue} />
+								<Datatable formValue={this.state.formValue} handleEdit={this.handleEdit} />
 							</div>
 						</div>
 					</div>

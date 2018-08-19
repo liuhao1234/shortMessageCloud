@@ -29,7 +29,7 @@ class Datatable extends Component{
 			dataIndex: 'action',
 			render: (text, record) => (
 					<Fragment>
-						<Icon className="table-btn" type='edit' style={{color:'green'}} />
+						<Icon className="table-btn" type='edit' onClick={this.handleEdit.bind(this,record)} style={{color:'green'}} />
 						<Icon className="table-btn" type='delete' onClick={this.handleDelete.bind(this,record)} style={{color:'red'}} />
 					</Fragment>
 			)
@@ -41,6 +41,10 @@ class Datatable extends Component{
 		loading : false,
 		pagination : {},
 		formValue:{}
+	}
+
+	handleEdit = (record)=>{
+		this.props.handleEdit(record);
 	}
 
 	handleDelete = (record) => {
