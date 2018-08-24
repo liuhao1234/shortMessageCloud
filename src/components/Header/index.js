@@ -1,6 +1,8 @@
 import React,{Component} from 'react';
+import { Modal } from 'antd';
+import Utils from './../../utils';
 
-
+const { confirm } = Modal;
 
 class Header extends Component{
 	state = {
@@ -10,6 +12,16 @@ class Header extends Component{
 	componentDidMount(){
 		let username = sessionStorage.getItem("username");
 		this.setState({ username });
+	}
+
+	handleLogout = ()=>{
+		confirm({
+		    title: '退出登录',
+		    content: '您确定要退出登录么？',
+		    onOk() {
+        		Utils.logOut();
+		    }
+  		})
 	}
 
 	render() {
@@ -22,7 +34,8 @@ class Header extends Component{
 					</div>
 					<div className="right">
 						<span className="user"><small>您好！{this.state.username}</small></span>
-						<span className="exit"><small>退出</small></span>
+						<span className="exit" onClick={this.handleLogout}><small>退出</small></span>
+						{/*<a href="/login" className="exit">退出</a>*/}
 					</div>
 				</div>
 			</div>

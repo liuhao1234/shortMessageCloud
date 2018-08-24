@@ -1,4 +1,5 @@
 import React,{ Component,Fragment } from 'react';
+import { shallowEqualImmutable } from 'react-immutable-render-mixin';
 import Axios from '../../axios/index';
 import { Table, Icon, Modal, message } from 'antd';
 
@@ -39,7 +40,10 @@ class Datatable extends Component{
 	state = {
 		dataSource : [],
 		loading : false,
-		pagination : {},
+		pagination : {
+			pageSize:10,
+			current:1
+		},
 		formValue:{}
 	}
 
@@ -48,17 +52,18 @@ class Datatable extends Component{
 	}
 
 	handleDelete = (record) => {
+		let _this = this;
 		confirm({
 		    title: '确定删除该条信息吗?',
 		    content: `电话号码为:${record.phone},该信息删除后将不能恢复!`,
 		    onOk() {
 		      	Axios.ajax({
-		    		url:'/blacklist/deleteBlacklist',
-		    		data:{
-						...record
-		    		}
+		    		url:`blacklist/deleteBlacklist/${record.key}`,
+		    		data:{}
 		    	}).then((res)=>{
 		    		if(res.code === 200){
+		    			//console.log(_this.state)
+		    			_this.getTableData();
 						message.success(res.message);
 		    		}else{
 		    			message.error(res.message);
@@ -69,28 +74,41 @@ class Datatable extends Component{
 	}
 
 	handleTableChange = (pagination) => {
-	    this.getTableData({
-	        pageSize: pagination.pageSize,
-	        startIndex: pagination.current
-	    });
+		this.setState({
+			pagination : {
+				pageSize:pagination.pageSize,
+				current:pagination.current
+			}
+		},()=>{
+			this.getTableData();
+		})
     }
 
     getTableData(params){
+    	//console.log(this.props.formValue)
+    	//console.log(this.state.formValue.Rangetime?this.state.formValue.Rangetime[0].format("YYYY-MM-DD"):"")
+    	const _this = this;
+    	if(!params){
+    		params = {
+    			pageSize:_this.state.pagination.pageSize,
+				startIndex:1
+    		}
+    	}
     	this.setState({ loading: true });
-    	/*console.log({
-    			...params,
-    			...this.state.formValue
-    		})*/
     	Axios.ajax({
     		url:'/blacklist/queryBlacklist',
     		data:{
     			...params,
-    			...this.state.formValue
+    			...this.state.formValue,
+    			startTime:this.state.formValue.Rangetime?this.state.formValue.Rangetime[0].format("YYYY-MM-DD"):"",
+    			endTime:this.state.formValue.Rangetime?this.state.formValue.Rangetime[1].format("YYYY-MM-DD"):"",
+    			orgId:this.state.formValue.orgName?this.state.formValue.orgName.split("-")[0]:"",
+    			orgName:this.state.formValue.orgName?this.state.formValue.orgName.split("-")[1]:"",
     		}
     	}).then((res)=>{
     		//console.log(res)
     		const   pagination = { 
-    					...this.state.pagination,
+    					..._this.state.pagination,
 		    			total : res.data.recordsTotal
 		    		};
     		this.setState({
@@ -109,27 +127,34 @@ class Datatable extends Component{
     	})
     }
 
-    componentWillReceiveProps(nextProps){
-    	console.log(nextProps)
+    componentWillMount(){
     	this.setState({
-    		formValue:nextProps.formValue
-    	},()=>{
-    		this.getTableData({
-	    		pageSize:10,
-	    		startIndex:1
-	    	})
+    		formValue:this.props.formValue
     	})
+    }
+
+    componentWillReceiveProps(nextProps, nextState){
+    	//console.log(nextProps.formValue);
+    	if(!shallowEqualImmutable(this.props, nextProps)){
+    		this.setState({
+    			formValue:nextProps.formValue
+    		},()=>{
+    			this.getTableData();
+    		})
+    	}
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+    	//console.log(!shallowEqualImmutable(this.props, nextProps) || !shallowEqualImmutable(this.state, nextState))
+        return !shallowEqualImmutable(this.props, nextProps) || !shallowEqualImmutable(this.state, nextState);
     }
 
     componentDidMount(){
-    	this.getTableData({
-    		pageSize:10,
-    		startIndex:1
-    	})
+    	this.getTableData();
     }
 
 	render(){
-		console.log("table被渲染")
+		//console.log("table被渲染")
 		return (
 			<Fragment>
 				<Table 

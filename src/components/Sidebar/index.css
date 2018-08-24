@@ -54,58 +54,85 @@ a:visited{
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
 }
-.sidebar_list ul li.num_01 a span{
+.sidebar_list ul li.organizations a span{
     background:url(../../assets/images/sidebar_icon_default_01.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_02 a span{
+.sidebar_list ul li.signature a span{
     background:url(../../assets/images/sidebar_icon_default_02.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_03 a span{
+.sidebar_list ul li.template a span{
     background:url(../../assets/images/sidebar_icon_default_03.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_04 a span{
+.sidebar_list ul li.passageway a span{
     background:url(../../assets/images/sidebar_icon_default_04.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_05 a span{
+.sidebar_list ul li.messages a span{
     background:url(../../assets/images/sidebar_icon_default_05.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_06 a span{
+.sidebar_list ul li.blacklist a span{
     background:url(../../assets/images/sidebar_icon_default_06.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_01.active a span{
+.sidebar_list ul li.rolelist a span{
+    background:url(../../assets/images/sidebar_icon_default_07.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.userlist a span{
+    background:url(../../assets/images/sidebar_icon_default_08.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.menulist a span{
+    background:url(../../assets/images/sidebar_icon_default_09.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.organizations.active a span{
     color:#fff;
     background:url(../../assets/images/sidebar_icon_active_01.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_02.active a span{
+.sidebar_list ul li.signature.active a span{
     color:#fff;
     background:url(../../assets/images/sidebar_icon_active_02.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_03.active a span{
+.sidebar_list ul li.template.active a span{
     color:#fff;
     background:url(../../assets/images/sidebar_icon_active_03.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_04.active a span{
+.sidebar_list ul li.passageway.active a span{
     color:#fff;
     background:url(../../assets/images/sidebar_icon_active_04.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_05.active a span{
+.sidebar_list ul li.messages.active a span{
     color:#fff;
     background:url(../../assets/images/sidebar_icon_active_05.png) no-repeat left center;
     background-size: auto 30px;
 }
-.sidebar_list ul li.num_06.active a span{
+.sidebar_list ul li.blacklist.active a span{
     color:#fff;
     background:url(../../assets/images/sidebar_icon_active_06.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.rolelist.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_07.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.userlist.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_08.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.menulist.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_09.png) no-repeat left center;
     background-size: auto 30px;
 }
 

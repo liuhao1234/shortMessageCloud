@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Modal, message } from 'antd';
-//import Utils from '../utils';
+import Utils from '../utils';
 message.config({
   duration: 2,
   maxCount: 1,
@@ -8,8 +8,8 @@ message.config({
 //Utils.logOut();
 export default class Axios {
 	static ajax(options){
-		//const baseURL = "http://192.168.100.10:9696";
-		const baseURL = " https://www.easy-mock.com/mock/5b73e7f8a364536777acd8c2";
+		const baseURL = "http://192.168.100.10:9696";
+		//const baseURL = " https://www.easy-mock.com/mock/5b73e7f8a364536777acd8c2";
 		const token = sessionStorage.getItem("beautifulGirl");
 
 		return new Promise((resolve,reject)=>{
@@ -29,10 +29,19 @@ export default class Axios {
 					if(res.code === 200){//code是501的时候请求超时
 						resolve(response.data);
 						sessionStorage.setItem("beautifulGirl",res.token);
+					}else if(res.code === 501){
+						Modal.info({
+						    title: '退出登录',
+						    content: res.message,
+						    onOk:() => {
+						    	Utils.logOut();
+						    },
+						})
 					}else{
 						message.warning(res.message);
 					}
 				}else{
+					Utils.logOut();
 					//链接失败
 					reject(response.data);
 					//弹窗提示

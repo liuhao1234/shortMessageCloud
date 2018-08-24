@@ -12,7 +12,9 @@ import Template from './components/Template';
 import Passageway from './components/Passageway';
 import Messages from './components/Messages';
 import Blacklist from './components/Blacklist';
-
+import Rolelist from './components/Rolelist';
+import Userlist from './components/Userlist';
+import Menulist from './components/Menulist';
 class IRouter extends Component{
 	render(){
 		return (
@@ -34,6 +36,9 @@ class IRouter extends Component{
 										<Route path={pathBase+"/passageway"} component={Passageway}/>
 										<Route path={pathBase+"/messages"} component={Messages}/>
 										<Route path={pathBase+"/blacklist"} component={Blacklist}/>
+										<Route path={pathBase+"/rolelist"} component={Rolelist}/>
+									    <Route path={pathBase+"/userlist"} component={Userlist}/>
+									    <Route path={pathBase+"/menulist"} component={Menulist}/>
 									</Home>
 								</Router>)
 							}else{
