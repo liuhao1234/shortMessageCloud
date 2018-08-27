@@ -9,19 +9,19 @@ import './index.css';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const FormItem = Form.Item;
-let disabled = false;
 class Rolelist extends Component{
     constructor(props){
         super(props);
         this.initTreeNode();
     }
 	state = {
-	    menuModalShow : false,
+	    disabled :false,
 		modalShow : false,
 		modalTitle : "",
 		loading : false,
 		selectformValue : {},
         formValue : {},
+        menuModalShow : false,
         selectedMenuIds:[],
         selectRoleId:0,
         selectMenuIds:[],
@@ -51,10 +51,9 @@ class Rolelist extends Component{
 	    });
 	}
 	//设置用户信息层的显示或隐藏
-	setModalVisible = (modalShow,modalTitle)=>{
-		this.setState({ modalShow, modalTitle });
+	setModalVisible = (modalShow,modalTitle,disabled)=>{
+		this.setState({ modalShow, modalTitle,disabled });
 		if(!modalShow){
-		    disabled = false;
 		    this.modalformRef.props.form.resetFields();
 		}
 	}
@@ -78,7 +77,7 @@ class Rolelist extends Component{
 	                        message.success(res.message);
 	                        values['refresh']=Math.random();
 	                        this.setState({ 
-	                            modalShow:false,formValue:values
+	                            modalShow:false,formValue:values,disabled:false
 	                        })
 	                        this.modalformRef.props.form.resetFields();
 	                    }else{
@@ -94,7 +93,7 @@ class Rolelist extends Component{
 	                        message.success(res.message);
 	                        values['refresh']=Math.random();
 	                        this.setState({ 
-	                            modalShow:false,formValue:values
+	                            modalShow:false,formValue:values,disabled:false
 	                        })
 	                        this.modalformRef.props.form.resetFields();
 	                    }else{
@@ -140,8 +139,7 @@ class Rolelist extends Component{
             data:{}
         }).then((res)=>{
             if(res.code === 200){
-                disabled = true;
-                _this.setModalVisible(true,"编辑角色");
+                _this.setModalVisible(true,"编辑角色",true);
                 _this.modalformRef.props.form.setFieldsValue({
                     roleIdModal:res.data.data.roleId,
                     roleNameModal:res.data.data.roleName,
@@ -153,7 +151,7 @@ class Rolelist extends Component{
             }
         })
 	}
-	//获取用户自己已经设置的菜单
+	//获取角色已经设置的菜单
 	handleSetMenu = (record)=>{
         const _this = this;
         this.setState({loading: true})
@@ -183,7 +181,7 @@ class Rolelist extends Component{
 							<div className="common_area">
 								<div className="table_title">
 									<span className="title_txt">角色列表</span>
-									<Button type="primary" onClick={this.setModalVisible.bind(this,true,"添加角色")} style={{float:'right'}}><Icon type="plus" />添加角色</Button>
+									<Button type="primary" onClick={this.setModalVisible.bind(this,true,"添加角色",false)} style={{float:'right'}}><Icon type="plus" />添加角色</Button>
 								</div>
 								<Datatable formValue={this.state.formValue} selectformValue={this.state.selectformValue}  handleEdit={this.handleEdit} handleSetMenu={this.handleSetMenu}  />
 							</div>
@@ -194,10 +192,10 @@ class Rolelist extends Component{
 		          title={this.state.modalTitle}
 		          visible={this.state.modalShow}
 		          closable={false}
-		          onCancel={this.setModalVisible.bind(this,false,"")}
+		          onCancel={this.setModalVisible.bind(this,false,"",false)}
 		          onOk={this.handleAddOrUpdateRole}
 		        >
-      				<ModalFormObj wrappedComponentRef={(form)=> this.modalformRef=form}></ModalFormObj>
+      				<ModalFormObj disabled={this.state.disabled} wrappedComponentRef={(form)=> this.modalformRef=form}></ModalFormObj>
 		        </Modal>
       			<Modal
                     title={'设置菜单'}
@@ -249,7 +247,7 @@ class ModalForm extends Component{
                             message: '请填写角色编码！'
                         }]
                     })(
-                      <Input type="text"  disabled={disabled} placeholder="请输入角色编码" style={{width:200}} />
+                      <Input type="text"  disabled={this.props.disabled} placeholder="请输入角色编码" style={{width:200}} />
                     )}
                 </FormItem>
 			</Form>

@@ -8,79 +8,71 @@ class Datatable extends Component{
 	constructor(props){
 		super(props);
 		this.columns = [{ //列数据
-			title: '用户姓名',
+			title: '机构名称',
 			align:'center',
-			dataIndex: 'userName',
-		}, { //列数据
-            title: '登录账号',
-            align:'center',
-            dataIndex: 'loginCode',
-        }, {
-            title: '机构名称',
-            align:'center',
-            dataIndex: 'orgName',
-        }, {
-			title: '性别',
-			align:'center',
-			dataIndex: 'sex',
+			dataIndex: 'orgName',
 		}, {
-			title: '创建时间',
+			title: '机构路径',
 			align:'center',
-			dataIndex: 'createTime',
+			dataIndex: 'orgUrl',
+		}, {
+			title: '参数模板',
+			align:'center',
+			dataIndex: 'orgTemplate',
+		}, {
+            title: '路径类型',
+            align:'center',
+            dataIndex: 'urlType',
+        }, {
 			title: '操作',
 			align:'center',
 			dataIndex: 'action',
 			render: (text, record) => (
 					<Fragment>
-					    <Icon className="table-btn" type='menu-unfold' onClick={this.handleSetRole.bind(this,record)} style={{color:'blue'}} />
 						<Icon className="table-btn" type='edit' onClick={this.handleEdit.bind(this,record)} style={{color:'green'}} />
 						<Icon className="table-btn" type='delete' onClick={this.handleDelete.bind(this,record)} style={{color:'red'}} />
 					</Fragment>
 			)
 		}]
 	}
-    
+
 	state = {
-	    refresh : "",
+        refresh : "",
 		dataSource : [],
 		loading : false,
 		pagination : {},
-		selectformValue:{}
+		formValue:{}
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-	    if (!_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState)) {
-	        return true
-	     } else {
-	        return false
-	     }
-	}
-	
+    shouldComponentUpdate(nextProps, nextState) {
+        if (!_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState)) {
+            return true
+        } else {
+            return false
+        }
+    }
+
 	handleEdit = (record)=>{
 		this.props.handleEdit(record);
 	}
 
-	handleSetRole = (record)=>{
-        this.props.handleSetRole(record);
-    }
-	
 	handleDelete = (record) => {
-	    const _this=this;
+        const _this=this;
 		confirm({
 		    title: '确定删除该条信息吗?',
 		    content: `该信息删除后将不能恢复!`,
 		    onOk() {
-		      	Axios.ajax({
-		    		url:'/user/del/'+record.key,
-		    		data:{}
-		    	}).then((res)=>{
-		    		if(res.code === 200){
-						message.success(res.message);
-						_this.componentDidMount();
-		    		}else{
-		    			message.error(res.message);
-		    		}
-		    	})
+                Axios.ajax({
+                    url:`/orgUrl/deleteSmsOrgUrl/${record.key}`,
+                    data:{}
+                }).then((res)=>{
+                    if(res.code === 200){
+                        message.success(res.message);
+                        _this.componentDidMount();
+                    }else{
+                        message.error(res.message);
+                    }
+                })
 		    }
 		});
 	}
@@ -94,18 +86,13 @@ class Datatable extends Component{
 
     getTableData(params){
     	this.setState({ loading: true });
-    	/*console.log({
-    			...params,
-    			...this.state.selectformValue
-    		})*/
     	Axios.ajax({
-    		url:'/user/query',
+    		url:'/orgUrl/queryOrgUrllist',
     		data:{
     			...params,
-    			...this.state.selectformValue
+    			...this.state.formValue
     		}
     	}).then((res)=>{
-    		//console.log(res)
     		const   pagination = { 
     					...this.state.pagination,
 		    			total : res.data.recordsTotal
@@ -114,12 +101,11 @@ class Datatable extends Component{
     			loading: false,
     			dataSource:res.data.data.map((item)=>{
     				return {
-    					key:item.userId,
-    					loginCode:item.loginCode,
-    					userName:item.userName,
-    					orgName:item.orgName,
-    					sex:item.sex,
-    					createTime:item.createTime
+    					key:item.orgUrlId,
+                        orgName:item.orgName,
+                        orgUrl:item.orgUrl,
+                        orgTemplate:item.orgTemplate,
+                        orgType:item.orgType
     				}
     			}),
     			pagination
@@ -130,10 +116,15 @@ class Datatable extends Component{
     componentWillReceiveProps(nextProps){
         if (_.isEqual(this.props, nextProps)) {
             return;
-         }
+        }
     	console.log(nextProps)
+
+        let _formValue = this.state.formValue;
+        if(nextProps.formValue.signId === undefined){
+            _formValue = nextProps.formValue;
+		}
     	this.setState({
-    		selectformValue:nextProps.selectformValue
+    		formValue:_formValue
     	},()=>{
     		this.getTableData({
 	    		pageSize:10,
@@ -143,6 +134,7 @@ class Datatable extends Component{
     }
 
     componentDidMount(){
+        debugger;
     	this.getTableData({
     		pageSize:10,
     		startIndex:1
@@ -150,6 +142,7 @@ class Datatable extends Component{
     }
 
 	render(){
+        debugger;
 		console.log("table被渲染")
 		return (
 			<Fragment>

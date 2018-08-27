@@ -15,6 +15,8 @@ import Blacklist from './components/Blacklist';
 import Rolelist from './components/Rolelist';
 import Userlist from './components/Userlist';
 import Menulist from './components/Menulist';
+import Orgurl from './components/Orgurl';
+import Passagewayurl from './components/Passagewayurl';
 class IRouter extends Component{
 	render(){
 		return (
@@ -39,6 +41,8 @@ class IRouter extends Component{
 										<Route path={pathBase+"/rolelist"} component={Rolelist}/>
 									    <Route path={pathBase+"/userlist"} component={Userlist}/>
 									    <Route path={pathBase+"/menulist"} component={Menulist}/>
+                                		<Route path={pathBase+"/orgurl"} component={Orgurl}/>
+                                		<Route path={pathBase+"/passagewayurl"} component={Passagewayurl}/>
 									</Home>
 								</Router>)
 							}else{

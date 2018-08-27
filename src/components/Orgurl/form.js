@@ -20,7 +20,6 @@ class Searchform extends Component{
     }
 
     getOrgSelect(){
-        debugger;
     	Axios.ajax({
             url:'/org/queryOrgSelect',
             data:{}
@@ -40,12 +39,7 @@ class Searchform extends Component{
 			<Form hideRequiredMark={true} onSubmit={this.props.handleSubmit} layout="inline" className="search-form">
 			    <Row>
     				<Col span={24}>
-	    				<FormItem label="签名名称">
-				            {getFieldDecorator('signName')(
-				              <Input type="text" placeholder="请输入签名名称" style={{width:200}} />
-				            )}
-				        </FormItem>
-						<FormItem label="所属机构">
+						<FormItem label="机构名称">
             				{getFieldDecorator('orgId')(
 								<Select placeholder="请选择所属机构" style={{ width: 200 }}>
     								<Option value="">不限</Option>
@@ -53,15 +47,33 @@ class Searchform extends Component{
 			 					</Select>
 							)}
 						</FormItem>
-				        <FormItem label="签名状态">
-				        	{getFieldDecorator('state')(
-								<Select placeholder="请选择签名状态" style={{ width: 200 }}>
+				        <FormItem label="参数模板">
+				        	{getFieldDecorator('orgTemplate')(
+								<Select placeholder="请选择参数模板" style={{ width: 200 }}>
 									<Option value="">不限</Option>
 									<Option value="-1">未上线</Option>
 									<Option value="1">已上线</Option>
 								</Select>
 				            )}
 				        </FormItem>
+        				<FormItem label="路径类型">
+							{getFieldDecorator('urlType')(
+								<Select placeholder="请选择路径类型" style={{ width: 200 }}>
+									<Option value="">不限</Option>
+									<Option value="-1">未上线</Option>
+									<Option value="1">已上线</Option>
+								</Select>
+							)}
+    					</FormItem>
+        				<FormItem label="路径状态">
+							{getFieldDecorator('state')(
+								<Select placeholder="请选择路径状态" style={{ width: 200 }}>
+									<Option value="">不限</Option>
+									<Option value="-1">未上线</Option>
+									<Option value="1">已上线</Option>
+								</Select>
+							)}
+    					</FormItem>
     				</Col>
     			</Row>
         		<Row>

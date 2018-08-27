@@ -9,7 +9,7 @@ const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 
 
-class Signature extends Component{
+class Passagewayurl extends Component{
 
     constructor(props) {
         super(props);
@@ -198,4 +198,4 @@ class ModalForm extends Component{
 
 const ModalFormObj = Form.create()(ModalForm);
 
-export default Signature;
+export default Passagewayurl;

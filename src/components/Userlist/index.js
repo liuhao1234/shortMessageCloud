@@ -3,19 +3,55 @@ import { Button, Icon, Form, Modal, Select, DatePicker, Input, message } from 'a
 import Axios from '../../axios/index';
 import SearchForm from './form.js';
 import Datatable from './table.js';
+import TreeSet from './tree.js';
 import './index.css';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const FormItem = Form.Item;
-let disabled = false
 class Userlist extends Component{
+    constructor(props){
+        super(props);
+        this.initTreeNode();
+        this.getOrgSelect();
+    }
 	state = {
+	    options : "",
+	    disabled :false,
 		modalShow : false,
 		modalTitle : "",
         selectformValue : {},
-		formValue : {}
+		formValue : {},
+        roleModalShow : false,
+        selectedRoleIds:[],
+        selectUserId:0,
+        selectRoleIds:[],
+        initTreeNodeData : {}
 	}
+	//获取组织结构下拉信息
+	getOrgSelect(){
+        let _this = this
+        Axios.ajax({
+            url:'/org/queryOrgSelect',
+            data:{}
+        }).then((res)=>{
+            let opts = res.data.data.map(
+                    (element)=>{
+                        return <Option value={element.orgId}>{element.orgName}</Option>});
+            _this.setState({options:opts})
+        })
+    }
+	//第一次加载树形菜单数据
+    initTreeNode(){
+        Axios.ajax({
+            url:'/role/query',
+            data:{"startIndex":1,"pageSize":9999
+            }
+        }).then((res)=>{
+            this.setState({initTreeNodeData: res.data.data})
+        })
+    }
+	//查询头 查询按钮
 	handleFormSubmit = (e) => {
 		e.preventDefault();
 		//var formValue = this.formRef.props.form.getFieldsValue();
@@ -28,16 +64,20 @@ class Userlist extends Component{
 			}
 	    });
 	}
-
-	setModalVisible = (modalShow,modalTitle)=>{
-		this.setState({ modalShow, modalTitle });
+	//设置用户信息层的显示或隐藏
+	setModalVisible = (modalShow,modalTitle,disabled)=>{
+		this.setState({ modalShow, modalTitle,disabled });
 		if(!modalShow){
-		    disabled = false;
 		    this.modalformRef.props.form.resetFields();
 		}
 	}
 
-	handleAddList = ()=>{
+	//设置菜单信息层的显示或隐藏
+    setRoleModalVisible = (roleModalShow)=>{
+        this.setState({ roleModalShow});
+    }
+    //新增 或 修改  用户      确定按钮事件
+    handleAddOrUpdateRole = ()=>{
 		this.modalformRef.props.form.validateFields((err, values) => {
 			if (!err) {
 				console.log(values)
@@ -57,7 +97,7 @@ class Userlist extends Component{
 	                        message.success(res.message);
 	                        values['refresh']=Math.random();
 	                        this.setState({ 
-	                            modalShow:false,formValue:values
+	                            modalShow:false,formValue:values,disabled:false
 	                        })
 	                        this.modalformRef.props.form.resetFields();
 	                    }else{
@@ -80,7 +120,7 @@ class Userlist extends Component{
 	                        message.success(res.message);
 	                        values['refresh']=Math.random();
 	                        this.setState({ 
-	                            modalShow:false,formValue:values
+	                            modalShow:false,formValue:values,disabled:false
 	                        })
 	                        this.modalformRef.props.form.resetFields();
 	                    }else{
@@ -92,7 +132,30 @@ class Userlist extends Component{
 			}
 	    });
 	}
+    
+    //从tree组件获取所选值
+    getSelectUserRole(values){
+        this.setState({selectRoleIds:values,selectedRoleIds:values});
+    }
+    
+    //设置角色菜单关系     确定按钮事件
+    handleSetUserRole = (values)=>{
+        let _this = this;
+        _this.setState({loading: true,roleModalShow:false});
+        Axios.ajax({
+            url:'/user/setUserRole/',
+            data:{'userId':_this.state.selectUserId,'roleIds':_this.state.selectRoleIds}
+        }).then((res)=>{
+            if(res.code === 200){
+                message.success(res.message);     
+                _this.setState({loading: false,roleModalShow:false});
+            }else{
+                message.error(res.message);
+            }
+        })
+    }
 	
+    //初始化修改页面参数
 	handleEdit = (record)=>{
 		console.log(record)
 		console.log(this)
@@ -103,8 +166,7 @@ class Userlist extends Component{
             data:{}
         }).then((res)=>{
             if(res.code === 200){
-                disabled = true;
-                _this.setModalVisible(true,"编辑用户");
+                _this.setModalVisible(true,"编辑用户",true);
                 _this.modalformRef.props.form.setFieldsValue({
                     userIdModal:res.data.data.userId,
                     loginCodeModal:res.data.data.loginCode,
@@ -121,6 +183,25 @@ class Userlist extends Component{
         })
 	}
 
+	//获取用户已经设置的角色
+    handleSetRole = (record)=>{
+        const _this = this;
+        this.setState({loading: true})
+        Axios.ajax({
+                url:'/user/queryUserRole/'+record.key,
+                data:{}
+            }).then((res)=>{
+                _this.setState({
+                    selectUserId:record.key,
+                    roleModalShow:true,
+                    loading: false,
+                    selectedRoleIds:res.data.data.map((item)=>{
+                        return item.roleId+""
+                    })
+                })
+            })
+    }
+	
 	render() {
 		return (
 			<Fragment>
@@ -133,9 +214,9 @@ class Userlist extends Component{
 							<div className="common_area">
 								<div className="table_title">
 									<span className="title_txt">用户列表</span>
-									<Button type="primary" onClick={this.setModalVisible.bind(this,true,"添加用户")} style={{float:'right'}}><Icon type="plus" />添加用户</Button>
+									<Button type="primary" onClick={this.setModalVisible.bind(this,true,"添加用户",false)} style={{float:'right'}}><Icon type="plus" />添加用户</Button>
 								</div>
-								<Datatable formValue={this.state.formValue} selectformValue={this.state.selectformValue}  handleEdit={this.handleEdit}  />
+								<Datatable formValue={this.state.formValue} selectformValue={this.state.selectformValue}  handleEdit={this.handleEdit} handleSetRole={this.handleSetRole} />
 							</div>
 						</div>
 					</div>
@@ -144,11 +225,20 @@ class Userlist extends Component{
 		          title={this.state.modalTitle}
 		          visible={this.state.modalShow}
 		          closable={false}
-		          onCancel={this.setModalVisible.bind(this,false,"")}
-		          onOk={this.handleAddList}
+		          onCancel={this.setModalVisible.bind(this,false,"",false)}
+		          onOk={this.handleAddOrUpdateRole}
 		        >
-      				<ModalFormObj wrappedComponentRef={(form)=> this.modalformRef=form}></ModalFormObj>
+      				<ModalFormObj disabled={this.state.disabled} options={this.state.options} wrappedComponentRef={(form)=> this.modalformRef=form}></ModalFormObj>
 		        </Modal>
+		        <Modal
+                    title={'设置角色'}
+                    visible={this.state.roleModalShow}
+                    closable={false}
+                    onCancel={this.setRoleModalVisible.bind(this,false)}
+                    onOk={this.handleSetUserRole}
+                  >   
+                <TreeSet selectedRoleIds={this.state.selectedRoleIds}  getSelectUserRole = {this.getSelectUserRole.bind(this)}  initTreeNodeData={this.state.initTreeNodeData} ></TreeSet>
+                </Modal>
 			</Fragment>
 		)
 	}
@@ -180,7 +270,7 @@ class ModalForm extends Component{
                             message: '请填写登录账号！'
                         }]
                     })(
-                      <Input type="text" disabled={disabled} placeholder="请输入登录账号" style={{width:200}} />
+                      <Input type="text" disabled={this.props.disabled} placeholder="请输入登录账号" style={{width:200}} />
                     )}
                 </FormItem>
                 <FormItem label="机构名称" {...formItemLayout}>
@@ -191,10 +281,7 @@ class ModalForm extends Component{
                         }]
                     })(
                         <Select labelInValue   placeholder="请选择机构名称" style={{ width: 200 }}>
-                            <Option value="1">北京资采</Option>
-                            <Option value="2">中国联通</Option>
-                            <Option value="3">中国移动</Option>
-                            <Option value="4">中国电信</Option>
+                            {this.props.options}
                         </Select>
                     )}
                 </FormItem>

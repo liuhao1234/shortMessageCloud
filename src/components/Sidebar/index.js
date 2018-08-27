@@ -1,6 +1,6 @@
 import React,{Component,Fragment} from 'react';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
-//import Axios from '../../axios/index';
+import Axios from '../../axios/index';
 import './index.css';
 class Sidebar extends Component{
 	constructor(props){
@@ -8,75 +8,44 @@ class Sidebar extends Component{
 		this.state = {
 			navIndex : 0
 		}
-		this.handleSidebarClick = this.handleSidebarClick.bind(this);
 	}
 
-	componentWillMount(){
-		this.setState({
-			navlist : [{
-						name : "机构管理",
-						className : "organizations",
-						href : '/home/organizations'
-					},{
-						name : "签名管理",
-						className:"signature",
-						href : '/home/signature'
-					},{
-						name : "模板管理",
-						className:"template",
-						href : '/home/template'
-					},{
-						name : "通道管理",
-						className:"passageway",
-						href : '/home/passageway'
-					},{
-						name : "短信发送明细",
-						className:"messages",
-						href : '/home/messages'
-					},{
-						name : "黑名单管理",
-						className:"blacklist",
-						href : '/home/blacklist'
-					},{
-                        name : "角色管理",
-						className:"rolelist",
-                        href : '/home/rolelist'
-                    },{
-                        name : "用户管理",
-						className:"userlist",
-                        href : '/home/userlist'
-                    },{
-                        name : "菜单管理",
-						className:"menulist",
-                        href : '/home/menulist'
-                    }]
+	getNavList = ()=>{
+		Axios.ajax({
+			url:"/user/queryUserMenu"
+		}).then((res)=>{
+			if(res.code === 200){
+				let navlist = res.data.data.map((item)=>{
+					return {
+						id:item.menuId,
+						name:item.menuName,
+						className:item.className,
+						href:item.menuUrl,
+					}
+				})
+				console.log(navlist)
+				this.setState({ navlist })
+			}
 		})
 	}
 
-	handleSidebarClick(e){
+	componentWillMount(){
+		this.getNavList();
+	}
+
+	handleSidebarClick = (e)=>{
 		var navIndex = Number(e.target.getAttribute("index"));
 		this.setState({ navIndex });
 	}
 
-	initNavList(){
+	initNavList = ()=>{
+		if(!this.state.navlist) return false;
 		return this.state.navlist.map((item,index)=>
-									<li key={index} className={item.className+" "+(this.state.navIndex===index?"active":"")}>
+									<li key={item.id} className={item.className+" "+(this.state.navIndex===index?"active":"")}>
 										<Link to={item.href}>
 											<span index={index}>{item.name}</span>
 										</Link>
 									</li>)
-	}
-
-	componentDidMount(){
-		/*Axios.ajax({
-    		url:'/user/queryRoleMenu',
-    		data:{},
-    	}).then((res)=>{
-    		console.log(res)
-    		this.setState({
-    			options:res
-    		})
-    	})*/
 	}
 
 	render() {

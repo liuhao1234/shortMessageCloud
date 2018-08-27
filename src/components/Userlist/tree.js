@@ -6,14 +6,14 @@ class TreeSet extends Component{
     getTreeNode(data){
        return data.map((item)=>{
             return (
-                <TreeNode  title={item.menuName} key={item.menuId} />
+                <TreeNode  title={item.roleName} key={item.roleId} />
             )
         })
     }
 	render(){
 		return (
 		        <div>
-		        <Tree defaultExpandAll={true} onCheck={this.props.getSelectRoleMenu} checkable={true} checkedKeys={this.props.selectedMenuIds} > 
+		        <Tree defaultExpandAll={true} onCheck={this.props.getSelectUserRole} checkable={true} checkedKeys={this.props.selectedRoleIds} > 
 		           <TreeNode  key="0" title="菜单">
 		             {this.getTreeNode(this.props.initTreeNodeData)}
 		           </TreeNode>

@@ -9,7 +9,7 @@ const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 
 
-class Signature extends Component{
+class Orgurl extends Component{
 
     constructor(props) {
         super(props);
@@ -50,7 +50,7 @@ class Signature extends Component{
                 debugger;
 				let orgName = document.getElementsByClassName("ant-select-selection-selected-value").item(0).innerHTML;
                 Axios.ajax({
-                    url:'/sign/saveSign/',
+                    url:'/orgUrl/saveSmsOrgUrl/',
                     data:{'signId':values.signId,'signName':values.signName,'orgId':values.orgId,'orgName':orgName,'state':values.state}
                 }).then((res)=>{
                     if(res.code === 200){
@@ -78,7 +78,7 @@ class Signature extends Component{
         console.log(this.modalformRef)
         let _this = this;
         Axios.ajax({
-            url:'/sign/queryById/'+record.key,
+            url:'/orgUrl/queryById/'+record.key,
             data:{}
         }).then((res)=>{
             if(res.code === 200){
@@ -198,4 +198,4 @@ class ModalForm extends Component{
 
 const ModalFormObj = Form.create()(ModalForm);
 
-export default Signature;
+export default Orgurl;
