@@ -23,10 +23,10 @@ class Userlist extends Component{
         selectformValue : {},
 		formValue : {},
         roleModalShow : false,
-        selectedRoleIds:[],
         selectUserId:0,
         selectRoleIds:[],
-        initTreeNodeData : {}
+        initTreeNodeData : {},
+		loadinge:false
 	}
 	//获取组织结构下拉信息
 	getOrgSelect(){
@@ -80,6 +80,8 @@ class Userlist extends Component{
     handleAddOrUpdateRole = ()=>{
 		this.modalformRef.props.form.validateFields((err, values) => {
 			if (!err) {
+			    this.setState({loadinge:true}) 
+			    let _this = this;
 				console.log(values)
 				if(values.userIdModal==null){
 				    Axios.ajax({
@@ -93,13 +95,14 @@ class Userlist extends Component{
                                'email':values.emailModal
 	                          }
 	                }).then((res)=>{
+	                    _this.setState({loadinge:false}) 
 	                    if(res.code === 200){
 	                        message.success(res.message);
 	                        values['refresh']=Math.random();
-	                        this.setState({ 
+	                        _this.setState({ 
 	                            modalShow:false,formValue:values,disabled:false
 	                        })
-	                        this.modalformRef.props.form.resetFields();
+	                        _this.modalformRef.props.form.resetFields();
 	                    }else{
 	                        message.error(res.message);
 	                    }
@@ -116,13 +119,14 @@ class Userlist extends Component{
                             'sex':values.sexModal,
                             'email':values.emailModal}
 	                }).then((res)=>{
+	                    _this.setState({loadinge:false}) 
 	                    if(res.code === 200){
 	                        message.success(res.message);
 	                        values['refresh']=Math.random();
-	                        this.setState({ 
+	                        _this.setState({ 
 	                            modalShow:false,formValue:values,disabled:false
 	                        })
-	                        this.modalformRef.props.form.resetFields();
+	                        _this.modalformRef.props.form.resetFields();
 	                    }else{
 	                        message.error(res.message);
 	                    }
@@ -135,17 +139,18 @@ class Userlist extends Component{
     
     //从tree组件获取所选值
     getSelectUserRole(values){
-        this.setState({selectRoleIds:values,selectedRoleIds:values});
+        this.setState({selectRoleIds:values});
     }
     
     //设置角色菜单关系     确定按钮事件
     handleSetUserRole = (values)=>{
         let _this = this;
-        _this.setState({loading: true,roleModalShow:false});
+        _this.setState({loading: true,roleModalShow:false,loadinge:true});
         Axios.ajax({
             url:'/user/setUserRole/',
             data:{'userId':_this.state.selectUserId,'roleIds':_this.state.selectRoleIds}
         }).then((res)=>{
+            _this.setState({loadinge:false}) 
             if(res.code === 200){
                 message.success(res.message);     
                 _this.setState({loading: false,roleModalShow:false});
@@ -195,7 +200,7 @@ class Userlist extends Component{
                     selectUserId:record.key,
                     roleModalShow:true,
                     loading: false,
-                    selectedRoleIds:res.data.data.map((item)=>{
+                    selectRoleIds:res.data.data.map((item)=>{
                         return item.roleId+""
                     })
                 })
@@ -225,6 +230,7 @@ class Userlist extends Component{
 		          title={this.state.modalTitle}
 		          visible={this.state.modalShow}
 		          closable={false}
+				  confirmLoading={this.state.loadinge} 
 		          onCancel={this.setModalVisible.bind(this,false,"",false)}
 		          onOk={this.handleAddOrUpdateRole}
 		        >
@@ -234,10 +240,11 @@ class Userlist extends Component{
                     title={'设置角色'}
                     visible={this.state.roleModalShow}
                     closable={false}
+		            confirmLoading={this.state.loadinge} 
                     onCancel={this.setRoleModalVisible.bind(this,false)}
                     onOk={this.handleSetUserRole}
                   >   
-                <TreeSet selectedRoleIds={this.state.selectedRoleIds}  getSelectUserRole = {this.getSelectUserRole.bind(this)}  initTreeNodeData={this.state.initTreeNodeData} ></TreeSet>
+                <TreeSet selectRoleIds={this.state.selectRoleIds}  getSelectUserRole = {this.getSelectUserRole.bind(this)}  initTreeNodeData={this.state.initTreeNodeData} ></TreeSet>
                 </Modal>
 			</Fragment>
 		)

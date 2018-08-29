@@ -13,7 +13,7 @@ class TreeSet extends Component{
 	render(){
 		return (
 		        <div>
-		        <Tree defaultExpandAll={true} onCheck={this.props.getSelectRoleMenu} checkable={true} checkedKeys={this.props.selectedMenuIds} > 
+		        <Tree defaultExpandAll={true} onCheck={this.props.getSelectRoleMenu} checkable={true} checkedKeys={this.props.selectMenuIds} > 
 		           <TreeNode  key="0" title="菜单">
 		             {this.getTreeNode(this.props.initTreeNodeData)}
 		           </TreeNode>

@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+import { shallowEqualImmutable } from 'react-immutable-render-mixin';
 import { Row, Col, Form, Input, Button} from 'antd';
 import {Radio, Select} from "antd/lib/index";
 import Axios from "../../axios";
@@ -9,10 +10,13 @@ const FormItem = Form.Item;
 
 
 class Searchform extends Component{
-
     constructor(props) {
         super(props);
         this.getOrgSelect();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !shallowEqualImmutable(this.props, nextProps) || !shallowEqualImmutable(this.state, nextState);
     }
 
     state = {
@@ -33,8 +37,6 @@ class Searchform extends Component{
 		console.log("查询表单被渲染")
 		const { getFieldDecorator } = this.props.form;
 
-        //this.getOrgSelect();
-
 		return (
 			<Form hideRequiredMark={true} onSubmit={this.props.handleSubmit} layout="inline" className="search-form">
 			    <Row>
@@ -42,45 +44,24 @@ class Searchform extends Component{
 						<FormItem label="机构名称">
             				{getFieldDecorator('orgId')(
 								<Select placeholder="请选择所属机构" style={{ width: 200 }}>
-    								<Option value="">不限</Option>
 		                			{this.state.options}
 			 					</Select>
 							)}
 						</FormItem>
-				        <FormItem label="参数模板">
-				        	{getFieldDecorator('orgTemplate')(
-								<Select placeholder="请选择参数模板" style={{ width: 200 }}>
-									<Option value="">不限</Option>
-									<Option value="-1">未上线</Option>
-									<Option value="1">已上线</Option>
-								</Select>
-				            )}
-				        </FormItem>
         				<FormItem label="路径类型">
 							{getFieldDecorator('urlType')(
 								<Select placeholder="请选择路径类型" style={{ width: 200 }}>
-									<Option value="">不限</Option>
-									<Option value="-1">未上线</Option>
-									<Option value="1">已上线</Option>
+									<Option value="PUSH_RESULT_RESULT">PUSH_RESULT_RESULT</Option>
+									<Option value="PUSH_REPLY_RESULT">PUSH_REPLY_RESULT</Option>
 								</Select>
 							)}
     					</FormItem>
-        				<FormItem label="路径状态">
-							{getFieldDecorator('state')(
-								<Select placeholder="请选择路径状态" style={{ width: 200 }}>
-									<Option value="">不限</Option>
-									<Option value="-1">未上线</Option>
-									<Option value="1">已上线</Option>
-								</Select>
-							)}
-    					</FormItem>
-    				</Col>
-    			</Row>
-        		<Row>
-        			<Col>
         				<FormItem>
 							<Button type="primary" htmlType="submit">查询</Button>
 				        </FormItem>
+						<FormItem>
+							<Button type="primary" htmlType="submit" onClick={(e)=>{e.preventDefault();this.props.form.resetFields()}}>重置</Button>
+						</FormItem>
         			</Col>
         		</Row>
 		    </Form>

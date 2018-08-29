@@ -10,7 +10,6 @@ const RadioGroup = Radio.Group;
 
 
 class Passagewayurl extends Component{
-
     constructor(props) {
         super(props);
         this.getOrgSelect();
@@ -55,8 +54,9 @@ class Passagewayurl extends Component{
                 }).then((res)=>{
                     if(res.code === 200){
                     	if(values.signId === undefined){
-                            this.formRef.props.form.setFieldsValue({'signName':values.signName,'orgId':values.orgId,'state':values.state});
-						}
+                            this.formRef.props.form.setFieldsValue({'channelId':'','requestType':'','urlType':'','state':''});
+                            values = {'channelId':'','requestType':'','urlType':'','state':''};
+                    	}
                         message.success(res.message);
                         values['refresh']=Math.random();
                         this.setState({
@@ -121,7 +121,7 @@ class Passagewayurl extends Component{
 							<div className="common_area">
 								<div className="table_title">
 									<span className="title_txt">签名列表</span>
-									<Button type="primary" onClick={this.setModalVisible.bind(this,true,"添加签名")} style={{float:'right'}}><Icon type="plus" />添加通道</Button>
+									<Button type="primary" onClick={this.setModalVisible.bind(this,true,"添加签名")} style={{float:'right'}}><Icon type="plus" />添加通道路径</Button>
 								</div>
 								<Datatable formValue={this.state.formValue} handleEdit={this.handleEdit} />
 							</div>
@@ -157,7 +157,7 @@ class ModalForm extends Component{
 		return(
 			<Form hideRequiredMark={true}>
             	<FormItem  {...formItemLayout}>
-					{getFieldDecorator('signId')(
+					{getFieldDecorator('channelUrlId')(
 						<Input type="hidden" />
 					)}
     			</FormItem>
@@ -171,14 +171,14 @@ class ModalForm extends Component{
 		              <Input type="text" placeholder="请输入签名名称" style={{width:280}} />
 		            )}
 		        </FormItem>
-        		<FormItem label="所属机构" {...formItemLayout}>
-					{getFieldDecorator('orgId',{
+        		<FormItem label="所属通道" {...formItemLayout}>
+					{getFieldDecorator('channelId',{
 						rules : [{
 							required: true,
-							message: '请填写所属机构！'
+							message: '请填写所属通道！'
 						}]
 					})(
-						<Select placeholder="请输入所属机构" style={{ width: 280 }}>
+						<Select placeholder="请输入所属通道" style={{ width: 280 }}>
 							{this.props.options}
 						</Select>
 					)}

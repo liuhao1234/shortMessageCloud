@@ -24,14 +24,25 @@ class Datatable extends Component{
 			align:'center',
 			dataIndex: 'action',
 			render: (text, record) => (
-					<Fragment>
-						<Icon className="table-btn" type='edit' onClick={this.handleEdit.bind(this,record)} style={{color:'green'}} />
-						<Icon className="table-btn" type='delete' onClick={this.handleDelete.bind(this,record)} style={{color:'red'}} />
-					</Fragment>
+					this.handleOperation(record)
 			)
 		}]
 	}
 
+    handleOperation(record){
+		if(record.state==='已上线'){
+            return <Fragment>
+            {/* <Icon className="table-btn" type='edit' onClick={this.handleEdit.bind(this,record)} style={{color:'green'}} />*/}
+            <Icon className="table-btn" type='arrow-down' onClick={this.handleUpDown.bind(this,record,"down")} style={{color:'blue'}} />
+            <Icon className="table-btn" type='delete' onClick={this.handleDelete.bind(this,record)} style={{color:'red'}} />
+            </Fragment>
+		}else{
+            return <Fragment>
+            <Icon className="table-btn" type='arrow-up' onClick={this.handleUpDown.bind(this,record,"up")} style={{color:'green'}} />
+            <Icon className="table-btn" type='delete' onClick={this.handleDelete.bind(this,record)} style={{color:'red'}} />
+            </Fragment>
+		}
+	}
 	state = {
         refresh : "",
 		dataSource : [],
@@ -51,6 +62,35 @@ class Datatable extends Component{
 	handleEdit = (record)=>{
 		this.props.handleEdit(record);
 	}
+
+    handleUpDown = (record, flag) => {
+        const _this=this;
+        let title;
+        let state;
+		if(flag==="up"){
+            title = '确定上线该签名吗?';
+            state = 1;
+		}else{
+            title = '确定下线该签名吗?';
+            state = -1;
+		}
+        confirm({
+            title: title,
+            onOk() {
+                Axios.ajax({
+                    url:`/sign/updateSign/`,
+                    data:{'signId':record.key,'state':state}
+                }).then((res)=>{
+                    if(res.code === 200){
+                        message.success(res.message);
+                        _this.componentDidMount();
+                    }else{
+                        message.error(res.message);
+                    }
+                })
+            }
+        });
+    }
 
 	handleDelete = (record) => {
         const _this=this;

@@ -42,12 +42,12 @@ class Passageway extends Component{
                 debugger;
                 Axios.ajax({
                     url:'/channel/saveSmsChannel/',
-                    data:{'channelId':values.channelId,'channelName':values.channelName,'channelType':values.channelType,'channelSt':values.channelSt,'channelCr':values.channelCr,'state':values.state,'topicName':values.topicName}
+                    data:{'channelId':values.channelId,'channelName':values.channelName,'channelSt':values.channelSt,'channelCr':values.channelCr,'topicName':values.topicName,'channelType':0}
                 }).then((res)=>{
                     if(res.code === 200){
                     	if(values.channelId === undefined){
-                            this.formRef.props.form.setFieldsValue({'channelName':values.channelName,'channelType':values.channelType,'state':values.state});
-                            //this.formRef.props.form.resetFields();
+                            this.formRef.props.form.setFieldsValue({'channelName':''});
+                            values = {'channelName':''};
 						}
                         message.success(res.message);
                         values['refresh']=Math.random();
@@ -78,10 +78,8 @@ class Passageway extends Component{
                 _this.modalformRef.props.form.setFieldsValue({
                     channelId:res.data.data.channelId,
                     channelName:res.data.data.channelName,
-                    channelType:res.data.data.channelType,
                     channelSt:res.data.data.channelSt,
                     channelCr:res.data.data.channelCr,
-                    state:res.data.data.state,
                     topicName:res.data.data.topicName
                 });
             }else{
@@ -152,16 +150,6 @@ class ModalForm extends Component{
 		              <Input type="text" placeholder="请输入通道名称" style={{width:280}} />
 		            )}
 		        </FormItem>
-        		<FormItem label="所属运营商" {...formItemLayout}>
-					{getFieldDecorator('channelType',{
-						rules : [{
-							required: true,
-							message: '请填写所属运营商！'
-						}]
-					})(
-						<Input type="text" placeholder="请输入所属运营商" style={{width:280}} />
-					)}
-    			</FormItem>
 			    <FormItem label="额定发送量(条)" {...formItemLayout}>
 						{getFieldDecorator('channelSt',{
 							rules : [{
@@ -182,17 +170,9 @@ class ModalForm extends Component{
 						<Input type="text" placeholder="请输入额定投诉率" style={{width:280}} />
 						)}
 	            </FormItem>
-        		<FormItem label="通道状态" {...formItemLayout}>
-					{getFieldDecorator('state',{ initialValue: "1" })(
-					<RadioGroup>
-					<Radio value="1">开启</Radio>
-						<Radio value="0">关闭</Radio>
-						</RadioGroup>
-					)}
-    			</FormItem>
-                <FormItem label="备注" {...formItemLayout}>
+                <FormItem label="TOPIC名称" {...formItemLayout}>
 						{getFieldDecorator('topicName')(
-						<Input type="text" placeholder="请输入备注" style={{width:280}} />
+						<Input type="text" placeholder="请输入TOPIC名称" style={{width:280}} />
 						)}
                 </FormItem>
 			</Form>

@@ -8,6 +8,7 @@ import './index.css';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+const { TextArea } = Input;
 const FormItem = Form.Item;
 class Rolelist extends Component{
     constructor(props){
@@ -22,10 +23,10 @@ class Rolelist extends Component{
 		selectformValue : {},
         formValue : {},
         menuModalShow : false,
-        selectedMenuIds:[],
         selectRoleId:0,
         selectMenuIds:[],
-        initTreeNodeData : {}
+        initTreeNodeData : {},
+        loadinge:false
 	}
 	//第一次加载树形菜单数据
 	initTreeNode(){
@@ -65,21 +66,26 @@ class Rolelist extends Component{
 	
 	//新增 或 修改 角色      确定按钮事件
 	handleAddOrUpdateRole = ()=>{
+	    
 		this.modalformRef.props.form.validateFields((err, values) => {
 			if (!err) {
-				console.log(values)
+			    this.setState({loadinge:true}) 
+			    let _this = this;
 				if(values.roleIdModal==null){
 				    Axios.ajax({
 	                    url:'/role/save/',
-	                    data:{'roleName':values.roleNameModal,'roleCode':values.roleCodeModal}
+	                    data:{'roleName':values.roleNameModal,
+	                        'roleCode':values.roleCodeModal,
+	                        'remark':values.remarkModal
+	                        }
 	                }).then((res)=>{
+	                    _this.setState({loadinge:false})
 	                    if(res.code === 200){
-	                        message.success(res.message);
 	                        values['refresh']=Math.random();
-	                        this.setState({ 
+	                        _this.setState({ 
 	                            modalShow:false,formValue:values,disabled:false
 	                        })
-	                        this.modalformRef.props.form.resetFields();
+	                        _this.modalformRef.props.form.resetFields();
 	                    }else{
 	                        message.error(res.message);
 	                    }
@@ -87,15 +93,19 @@ class Rolelist extends Component{
 				}else{
 				    Axios.ajax({
 	                    url:'/role/update/',
-	                    data:{'roleId':values.roleIdModal,'roleName':values.roleNameModal,'roleCode':values.roleCodeModal}
+	                    data:{'roleId':values.roleIdModal,
+	                        'roleName':values.roleNameModal,
+	                        'roleCode':values.roleCodeModal,
+	                        'remark':values.remarkModal}
 	                }).then((res)=>{
+	                    _this.setState({loadinge:false}) 
 	                    if(res.code === 200){
 	                        message.success(res.message);
 	                        values['refresh']=Math.random();
-	                        this.setState({ 
+	                        _this.setState({ 
 	                            modalShow:false,formValue:values,disabled:false
 	                        })
-	                        this.modalformRef.props.form.resetFields();
+	                        _this.modalformRef.props.form.resetFields();
 	                    }else{
 	                        message.error(res.message);
 	                    }
@@ -108,17 +118,18 @@ class Rolelist extends Component{
 	
 	//从tree组件获取所选值
 	getSelectRoleMenu(values){
-	    this.setState({selectMenuIds:values,selectedMenuIds:values});
+	    this.setState({selectMenuIds:values});
 	}
 	
 	//设置角色菜单关系     确定按钮事件
     handleSetRoleMenu = (values)=>{
         let _this = this;
-        _this.setState({loading: true,menuModalShow:false});
+        _this.setState({loading: true,menuModalShow:false,loadinge:true});
         Axios.ajax({
             url:'/user/setRoleMenu/',
             data:{'roleId':_this.state.selectRoleId,'menuIds':_this.state.selectMenuIds}
         }).then((res)=>{
+            _this.setState({loadinge:false}) 
             if(res.code === 200){
                 message.success(res.message);     
                 _this.setState({loading: false,menuModalShow:false});
@@ -143,7 +154,8 @@ class Rolelist extends Component{
                 _this.modalformRef.props.form.setFieldsValue({
                     roleIdModal:res.data.data.roleId,
                     roleNameModal:res.data.data.roleName,
-                    roleCodeModal:res.data.data.roleCode
+                    roleCodeModal:res.data.data.roleCode,
+                    remarkModal:res.data.data.remark
                 });
                 
             }else{
@@ -163,7 +175,7 @@ class Rolelist extends Component{
                     selectRoleId:record.key,
                     menuModalShow:true,
                     loading: false,
-                    selectedMenuIds:res.data.data.map((item)=>{
+                    selectMenuIds:res.data.data.map((item)=>{
                         return item.menuId+""
                     })
                 })
@@ -191,6 +203,7 @@ class Rolelist extends Component{
 				<Modal
 		          title={this.state.modalTitle}
 		          visible={this.state.modalShow}
+				  confirmLoading={this.state.loadinge} 
 		          closable={false}
 		          onCancel={this.setModalVisible.bind(this,false,"",false)}
 		          onOk={this.handleAddOrUpdateRole}
@@ -201,10 +214,11 @@ class Rolelist extends Component{
                     title={'设置菜单'}
                     visible={this.state.menuModalShow}
                     closable={false}
+      			    confirmLoading={this.state.loadinge} 
                     onCancel={this.setMenuModalVisible.bind(this,false)}
                     onOk={this.handleSetRoleMenu}
                   >   
-      			<TreeSet selectedMenuIds={this.state.selectedMenuIds}  getSelectRoleMenu = {this.getSelectRoleMenu.bind(this)}  initTreeNodeData={this.state.initTreeNodeData} ></TreeSet>
+      			<TreeSet selectMenuIds={this.state.selectMenuIds}  getSelectRoleMenu = {this.getSelectRoleMenu.bind(this)}  initTreeNodeData={this.state.initTreeNodeData} ></TreeSet>
                 </Modal>
 			</Fragment>
 		)
@@ -248,6 +262,11 @@ class ModalForm extends Component{
                         }]
                     })(
                       <Input type="text"  disabled={this.props.disabled} placeholder="请输入角色编码" style={{width:200}} />
+                    )}
+                </FormItem>
+                <FormItem label="备注" {...formItemLayout}>
+                    {getFieldDecorator('remarkModal')(
+                       <TextArea   autosize={{minRows:2}} style={{width:200}} />
                     )}
                 </FormItem>
 			</Form>

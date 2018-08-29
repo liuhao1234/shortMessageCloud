@@ -30,6 +30,9 @@ class Searchform extends Component{
         				<FormItem>
 							<Button type="primary" htmlType="submit">查询</Button>
 				        </FormItem>
+				        <FormItem>
+                            <Button type="primary" htmlType="submit" onClick={(e)=>{e.preventDefault();this.props.form.resetFields()}}>重置</Button>
+                        </FormItem>
         			</Col>
         		</Row>
 		    </Form>

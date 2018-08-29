@@ -13,6 +13,7 @@ a:visited{
     top:0;
     left:0;
     z-index:99;
+    overflow: auto;
 }
 .psidebarinner{
     padding-top:70px;
@@ -98,6 +99,10 @@ a:visited{
     background:url(../../assets/images/sidebar_icon_default_11.png) no-repeat left center;
     background-size: auto 30px;
 }
+.sidebar_list ul li.sendsms a span{
+    background:url(../../assets/images/sidebar_icon_default_12.png) no-repeat left center;
+    background-size: auto 30px;
+}
 .sidebar_list ul li.organizations.active a span{
     color:#fff;
     background:url(../../assets/images/sidebar_icon_active_01.png) no-repeat left center;
@@ -151,6 +156,11 @@ a:visited{
 .sidebar_list ul li.passagewayurl.active a span{
     color:#fff;
     background:url(../../assets/images/sidebar_icon_active_11.png) no-repeat left center;
+    background-size: auto 30px;
+}
+.sidebar_list ul li.sendsms.active a span{
+    color:#fff;
+    background:url(../../assets/images/sidebar_icon_active_12.png) no-repeat left center;
     background-size: auto 30px;
 }
 

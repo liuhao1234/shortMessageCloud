@@ -6,7 +6,7 @@ class Sidebar extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			navIndex : 0
+			navIndex : ''
 		}
 	}
 
@@ -23,7 +23,7 @@ class Sidebar extends Component{
 						href:item.menuUrl,
 					}
 				})
-				console.log(navlist)
+				//console.log(navlist)
 				this.setState({ navlist })
 			}
 		})

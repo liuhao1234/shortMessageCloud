@@ -5,6 +5,7 @@ import Datatable from './table.js';
 import UploadPicture from './upload.js';
 import {Radio} from "antd/lib/index";
 import Axios from "../../axios";
+import './index.css';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -46,11 +47,12 @@ class Organization extends Component{
                 console.log(values)
                 Axios.ajax({
                     url:'/org/saveSmsOrg/',
-                    data:{'orgId':values.orgId,'orgName':values.orgName,'orgAddress':values.orgAddress,'orgBusinessAd':values.orgBusinessAd,'orgContactName':values.orgContactName,'state':values.state,'orgContactMail':values.orgContactMail,'orgContactPhone':values.orgContactPhone,"extnum":10,"maxCnt":5000}
+                    data:{'orgId':values.orgId,'orgName':values.orgName,'orgAddress':values.orgAddress,'orgBusinessAd':values.orgBusinessAd,'orgContactName':values.orgContactName,'orgContactMail':values.orgContactMail,'orgContactPhone':values.orgContactPhone,"extnum":values.extnum,"maxCnt":values.maxCnt}
                 }).then((res)=>{
                     if(res.code === 200){
                         if(values.orgId === undefined){
-                            this.formRef.props.form.setFieldsValue({'orgName':values.orgName,'state':values.state});
+                            this.formRef.props.form.setFieldsValue({'orgName':'','state':'-1'});
+                            values = {'orgName':'','state':'-1'};
                         }
                         message.success(res.message);
                         values['refresh']=Math.random();
@@ -102,9 +104,10 @@ class Organization extends Component{
                     orgAddress:res.data.data.orgAddress,
                     orgBusinessAd:res.data.data.orgBusinessAd,
                     orgContactName:res.data.data.orgContactName,
-                    state:res.data.data.state,
                     orgContactMail:res.data.data.orgContactMail,
-                    orgContactPhone:res.data.data.orgContactPhone
+                    orgContactPhone:res.data.data.orgContactPhone,
+                    extnum:res.data.data.extnum,
+                    maxCnt:res.data.data.maxCnt
                 });
             }else{
                 message.error(res.message);
@@ -195,14 +198,6 @@ class ModalForm extends Component{
                             <Input type="hidden" id="orgBusinessAd"/>
 						)}
     			</FormItem>
-                <FormItem label="认证状态" {...formItemLayout}>
-						{getFieldDecorator('state',{ initialValue: "1" })(
-						    <RadioGroup>
-						        <Radio value="1">是</Radio>
-							    <Radio value="0">否</Radio>
-							</RadioGroup>
-						)}
-                </FormItem>
 		        <FormItem label="对接人姓名" {...formItemLayout}>
 						{getFieldDecorator('orgContactName',{
 							rules : [{
@@ -239,6 +234,26 @@ class ModalForm extends Component{
 						<Input type="text" placeholder="请输入对接人电话" style={{width:280}} />
 						)}
                 </FormItem>
+        		<FormItem label="扩展码" {...formItemLayout}>
+					{getFieldDecorator('extnum',{
+						rules : [{
+							required: true,
+							message: '请填写扩展码！'
+						}]
+					})(
+						<Input type="text" placeholder="请输入扩展码" style={{width:280}} />
+					)}
+    			</FormItem>
+        		<FormItem label="单次请求最大数量" {...formItemLayout}>
+					{getFieldDecorator('maxCnt',{
+						rules : [{
+							required: true,
+							message: '请填写单次请求最大数量！'
+						}]
+					})(
+						<Input type="text" placeholder="请输入单次请求最大数量" style={{width:280}} />
+					)}
+    			</FormItem>
 			</Form>
 		)
 	}

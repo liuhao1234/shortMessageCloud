@@ -28,12 +28,13 @@ class Datatable extends Component{
 			title: '操作',
 			align:'center',
 			dataIndex: 'action',
-			render: (text, record) => (
+			render: (text, record) => {
+				return (
 					<Fragment>
 						<Icon className="table-btn" type='edit' onClick={this.handleEdit.bind(this,record)} style={{color:'green'}} />
 						<Icon className="table-btn" type='delete' onClick={this.handleDelete.bind(this,record)} style={{color:'red'}} />
 					</Fragment>
-			)
+			)}
 		}]
 	}
 

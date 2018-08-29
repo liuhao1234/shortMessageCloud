@@ -1,0 +1,4 @@
+.welcome_wraper{
+	height:calc(100vh - 90px);
+	background:#fff url(../../assets/images/welcome_bg.png) no-repeat center center!important;
+}

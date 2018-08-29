@@ -8,17 +8,9 @@ class Datatable extends Component{
 	constructor(props){
 		super(props);
 		this.columns = [{ //列数据
-			title: '通道ID',
-			align:'center',
-			dataIndex: 'channelId',
-		}, {
 			title: '通道名称',
 			align:'center',
 			dataIndex: 'channelName',
-		}, {
-			title: '所属运营商',
-			align:'center',
-			dataIndex: 'channelType',
 		}, {
             title: '额定发送量',
             align:'center',
@@ -27,6 +19,10 @@ class Datatable extends Component{
             title: '额定投诉率',
             align:'center',
             dataIndex: 'channelCr',
+        }, {
+            title: 'TOPIC名称',
+            align:'center',
+            dataIndex: 'topicName',
         }, {
 			title: '操作',
 			align:'center',
@@ -64,10 +60,10 @@ class Datatable extends Component{
         const _this=this;
 		confirm({
 		    title: '确定删除该条信息吗?',
-		    content: `通道名称为:${record.channelName},该信息删除后将不能恢复!`,
+		    content: `该信息删除后将不能恢复!`,
 		    onOk() {
                 Axios.ajax({
-                    url:`/channel/deleteSmsChannel/${record.channelId}`,
+                    url:`/channel/deleteSmsChannel/${record.key}`,
                     data:{}
                 }).then((res)=>{
                     if(res.code === 200){
@@ -106,11 +102,10 @@ class Datatable extends Component{
     			dataSource:res.data.data.map((item)=>{
     				return {
     					key:item.channelId,
-                        channelId:item.channelId,
                         channelName:item.channelName,
-                        channelType:item.channelType,
                         channelSt:item.channelSt,
-                        channelCr:item.channelCr
+                        channelCr:item.channelCr,
+                        topicName:item.topicName
     				}
     			}),
     			pagination

@@ -15,7 +15,11 @@ class Datatable extends Component{
 			title: '菜单URL',
 			align:'center',
 			dataIndex: 'menuUrl',
-		}, {
+		},{
+            title: '菜单顺序',
+            align:'center',
+            dataIndex: 'sort',
+        }, {
 			title: '创建时间',
 			align:'center',
 			dataIndex: 'createTime',
@@ -104,6 +108,7 @@ class Datatable extends Component{
     					key:item.menuId,
     					menuName:item.menuName,
     					menuUrl:item.menuUrl,
+    					sort:item.sort,
     					createTime:item.createTime
     				}
     			}),

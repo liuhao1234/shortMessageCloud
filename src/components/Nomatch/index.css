@@ -1,0 +1,4 @@
+.no_match{
+	height:calc(100vh - 90px);
+	background:#fff url(../../assets/images/nomacth_bg.png) no-repeat center center!important;
+}

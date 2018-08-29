@@ -55,8 +55,9 @@ class Signature extends Component{
                 }).then((res)=>{
                     if(res.code === 200){
                     	if(values.signId === undefined){
-                            this.formRef.props.form.setFieldsValue({'signName':values.signName,'orgId':values.orgId,'state':values.state});
-						}
+                            this.formRef.props.form.setFieldsValue({'signName':'','orgId':'','state':''});
+                            values = {'signName':'','orgId':'','state':''};
+                    	}
                         message.success(res.message);
                         values['refresh']=Math.random();
                         this.setState({
@@ -88,8 +89,7 @@ class Signature extends Component{
                     signId:res.data.data.signId,
                     signName:res.data.data.signName,
                     orgId:res.data.data.orgId,
-                    orgName:res.data.data.orgName,
-                    state:res.data.data.state
+                    orgName:res.data.data.orgName
                 });
             }else{
                 message.error(res.message);
@@ -181,14 +181,6 @@ class ModalForm extends Component{
 						<Select placeholder="请输入所属机构" style={{ width: 280 }}>
 							{this.props.options}
 						</Select>
-					)}
-    			</FormItem>
-        		<FormItem label="签名状态" {...formItemLayout}>
-					{getFieldDecorator('state',{ initialValue: "-1" })(
-					    <RadioGroup>
-							<Radio value="-1">未上线</Radio>
-                            <Radio value="1">已上线</Radio>
-                        </RadioGroup>
 					)}
     			</FormItem>
 			</Form>

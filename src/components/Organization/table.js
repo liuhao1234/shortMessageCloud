@@ -8,18 +8,34 @@ class Datatable extends Component{
 	constructor(props){
 		super(props);
 		this.columns = [{ //列数据
-			title: '机构ID',
-			align:'center',
-			dataIndex: 'orgId',
-		}, {
 			title: '机构名称',
 			align:'center',
 			dataIndex: 'orgName',
 		}, {
+			title: '机构账号',
+			align:'center',
+			dataIndex: 'appkey',
+		}, {
+            title: '机构密码',
+            align:'center',
+            dataIndex: 'appsecret',
+        }, {
 			title: '认证状态',
 			align:'center',
 			dataIndex: 'state',
 		}, {
+            title: '对接人姓名',
+            align:'center',
+            dataIndex: 'orgContactName',
+        }, {
+            title: '对接人邮箱',
+            align:'center',
+            dataIndex: 'orgContactMail',
+        }, {
+            title: '对接人电话',
+            align:'center',
+            dataIndex: 'orgContactPhone',
+        }, {
 			title: '操作',
 			align:'center',
 			dataIndex: 'action',
@@ -56,10 +72,10 @@ class Datatable extends Component{
         const _this=this;
 		confirm({
 		    title: '确定删除该条信息吗?',
-		    content: `机构名称为:${record.orgName},该信息删除后将不能恢复!`,
+		    content: `该信息删除后将不能恢复!`,
 		    onOk() {
                 Axios.ajax({
-                    url:`/org/deleteSmsOrg/${record.orgId}`,
+                    url:`/org/deleteSmsOrg/${record.key}`,
                     data:{}
                 }).then((res)=>{
                     if(res.code === 200){
@@ -98,11 +114,11 @@ class Datatable extends Component{
     			dataSource:res.data.data.map((item)=>{
     				return {
     					key:item.orgId,
-                        orgId:item.orgId,
     					orgName:item.orgName,
+                        appkey:item.appkey,
+                        appsecret:item.appsecret,
     					state:item.state,
                         orgAddress:item.orgAddress,
-                        orgBusinessAd:item.orgBusinessAd,
                         orgContactName:item.orgContactName,
                         orgContactMail:item.orgContactMail,
                         orgContactPhone:item.orgContactPhone,

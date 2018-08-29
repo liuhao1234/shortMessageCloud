@@ -4,6 +4,8 @@ import SearchForm from './form.js';
 import Datatable from './table.js';
 import {message, Radio, Select} from "antd/lib/index";
 import Axios from "../../axios";
+
+const { TextArea } = Input;
 const { Option } = Select;
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -47,16 +49,16 @@ class Orgurl extends Component{
 		this.modalformRef.props.form.validateFields((err, values) => {
 			if (!err) {
 				console.log(values)
-                debugger;
 				let orgName = document.getElementsByClassName("ant-select-selection-selected-value").item(0).innerHTML;
                 Axios.ajax({
                     url:'/orgUrl/saveSmsOrgUrl/',
-                    data:{'signId':values.signId,'signName':values.signName,'orgId':values.orgId,'orgName':orgName,'state':values.state}
+                    data:{'orgUrlId':values.orgUrlId,'orgId':values.orgId,'orgName':orgName,'orgUrl':values.orgUrl,'urlType':values.urlType,'orgTemplate':values.orgTemplate}
                 }).then((res)=>{
                     if(res.code === 200){
-                    	if(values.signId === undefined){
-                            this.formRef.props.form.setFieldsValue({'signName':values.signName,'orgId':values.orgId,'state':values.state});
-						}
+                    	if(values.orgUrlId === undefined){
+                            this.formRef.props.form.resetFields();
+                            values = {'orgId':'','urlType':''};
+                    	}
                         message.success(res.message);
                         values['refresh']=Math.random();
                         this.setState({
@@ -83,12 +85,13 @@ class Orgurl extends Component{
         }).then((res)=>{
             if(res.code === 200){
             	debugger;
-                _this.setModalVisible(true,"编辑签名");
+                _this.setModalVisible(true,"编辑机构路径");
                 _this.modalformRef.props.form.setFieldsValue({
-                    signId:res.data.data.signId,
-                    signName:res.data.data.signName,
+                    orgUrlId:res.data.data.orgUrlId,
                     orgId:res.data.data.orgId,
-                    orgName:res.data.data.orgName,
+                    orgUrl:res.data.data.orgUrl,
+                    orgTemplate:res.data.data.orgTemplate,
+                    urlType:res.data.data.urlType,
                     state:res.data.data.state
                 });
             }else{
@@ -98,7 +101,6 @@ class Orgurl extends Component{
 	}
 
     getOrgSelect(){
-		debugger;
         Axios.ajax({
             url:'/org/queryOrgSelect',
             data:{}
@@ -109,7 +111,6 @@ class Orgurl extends Component{
     }
 
 	render() {
-        //this.getOrgSelect();
 		return (
 			<Fragment>
 				<div className="pmain_con">
@@ -120,8 +121,8 @@ class Orgurl extends Component{
 						<div className="pmain_show">
 							<div className="common_area">
 								<div className="table_title">
-									<span className="title_txt">签名列表</span>
-									<Button type="primary" onClick={this.setModalVisible.bind(this,true,"添加签名")} style={{float:'right'}}><Icon type="plus" />添加通道</Button>
+									<span className="title_txt">机构路径列表</span>
+									<Button type="primary" onClick={this.setModalVisible.bind(this,true,"添加机构路径")} style={{float:'right'}}><Icon type="plus" />添加机构路径</Button>
 								</div>
 								<Datatable formValue={this.state.formValue} handleEdit={this.handleEdit} />
 							</div>
@@ -157,20 +158,10 @@ class ModalForm extends Component{
 		return(
 			<Form hideRequiredMark={true}>
             	<FormItem  {...formItemLayout}>
-					{getFieldDecorator('signId')(
+					{getFieldDecorator('orgUrlId')(
 						<Input type="hidden" />
 					)}
     			</FormItem>
-				<FormItem label="签名名称" {...formItemLayout}>
-		            {getFieldDecorator('signName',{
-		            	rules : [{
-		            		required: true,
-		            		message: '请填写签名名称！'
-		            	}]
-		            })(
-		              <Input type="text" placeholder="请输入签名名称" style={{width:280}} />
-		            )}
-		        </FormItem>
         		<FormItem label="所属机构" {...formItemLayout}>
 					{getFieldDecorator('orgId',{
 						rules : [{
@@ -183,12 +174,32 @@ class ModalForm extends Component{
 						</Select>
 					)}
     			</FormItem>
-        		<FormItem label="签名状态" {...formItemLayout}>
-					{getFieldDecorator('state',{ initialValue: "-1" })(
-					    <RadioGroup>
-							<Radio value="-1">未上线</Radio>
-                            <Radio value="1">已上线</Radio>
-                        </RadioGroup>
+        		<FormItem label="机构路径" {...formItemLayout}>
+					{getFieldDecorator('orgUrl',{
+						rules : [{
+							required: true,
+							message: '请填写机构路径！'
+						}]
+					})(
+						<Input type="text" placeholder="请输入机构路径" style={{width:280}} />
+					)}
+    			</FormItem>
+        		<FormItem label="路径类型" {...formItemLayout}>
+					{getFieldDecorator('urlType')(
+                    <Select placeholder="请选择路径类型" style={{ width: 280 }}>
+                        <Option value="PUSH_RESULT_RESULT">PUSH_RESULT_RESULT</Option>
+                        <Option value="PUSH_REPLY_RESULT">PUSH_REPLY_RESULT</Option>
+					</Select>
+					)}
+    			</FormItem>
+        		<FormItem label="请求参数模板" {...formItemLayout}>
+					{getFieldDecorator('orgTemplate',{
+						rules : [{
+							required: true,
+							message: '请填写请求参数模板！'
+						}]
+					})(
+                        <TextArea  placeholder="请输入请求参数模板" autosize={{minRows:2}} style={{width:280}} />
 					)}
     			</FormItem>
 			</Form>

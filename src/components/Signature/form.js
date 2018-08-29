@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+import { shallowEqualImmutable } from 'react-immutable-render-mixin';
 import { Row, Col, Form, Input, Button} from 'antd';
 import {Radio, Select} from "antd/lib/index";
 import Axios from "../../axios";
@@ -7,12 +8,13 @@ const RadioGroup = Radio.Group;
 const { Option } = Select;
 const FormItem = Form.Item;
 
-
 class Searchform extends Component{
-
     constructor(props) {
         super(props);
         this.getOrgSelect();
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+        return !shallowEqualImmutable(this.props, nextProps) || !shallowEqualImmutable(this.state, nextState);
     }
 
     state = {
@@ -33,8 +35,6 @@ class Searchform extends Component{
 	render(){
 		console.log("查询表单被渲染")
 		const { getFieldDecorator } = this.props.form;
-
-        //this.getOrgSelect();
 
 		return (
 			<Form hideRequiredMark={true} onSubmit={this.props.handleSubmit} layout="inline" className="search-form">
@@ -62,13 +62,12 @@ class Searchform extends Component{
 								</Select>
 				            )}
 				        </FormItem>
-    				</Col>
-    			</Row>
-        		<Row>
-        			<Col>
         				<FormItem>
 							<Button type="primary" htmlType="submit">查询</Button>
 				        </FormItem>
+						<FormItem>
+							<Button type="primary" htmlType="submit" onClick={(e)=>{e.preventDefault();this.props.form.resetFields()}}>重置</Button>
+						</FormItem>
         			</Col>
         		</Row>
 		    </Form>

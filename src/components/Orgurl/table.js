@@ -105,7 +105,7 @@ class Datatable extends Component{
                         orgName:item.orgName,
                         orgUrl:item.orgUrl,
                         orgTemplate:item.orgTemplate,
-                        orgType:item.orgType
+                        urlType:item.urlType
     				}
     			}),
     			pagination

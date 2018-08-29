@@ -7,13 +7,15 @@ import './index.css';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+const { TextArea } = Input;
 const FormItem = Form.Item;
 class Menulist extends Component{
 	state = {
 		modalShow : false,
 		modalTitle : "",
         selectformValue : {},
-		formValue : {}
+		formValue : {},
+		loadinge:false
 	}
 	handleFormSubmit = (e) => {
 		e.preventDefault();
@@ -38,27 +40,32 @@ class Menulist extends Component{
 	handleAddList = ()=>{
 		this.modalformRef.props.form.validateFields((err, values) => {
 			if (!err) {
+			    this.setState({loadinge:true}) 
 				console.log(values)
+				let _this = this;
 				if(values.menuIdModal==null){
-				    Axios.ajax({
+				     Axios.ajax({
 	                    url:'/menu/save/',
 	                    data:{'menuName':values.menuNameModal,
 	                        'menuUrl':values.menuUrlModal,
 	                        'sort':values.sortModal,
-	                        'className':values.classNameModal
+	                        'className':values.classNameModal,
+	                        'remark':values.remarkModal
 	                        }
 	                }).then((res)=>{
+	                    _this.setState({loadinge:false})
 	                    if(res.code === 200){
 	                        message.success(res.message);
 	                        values['refresh']=Math.random();
-	                        this.setState({ 
+	                        _this.setState({ 
 	                            modalShow:false,formValue:values
 	                        })
-	                        this.modalformRef.props.form.resetFields();
+	                        _this.modalformRef.props.form.resetFields();
 	                    }else{
 	                        message.error(res.message);
 	                    }
 	                })
+	                
 				}else{
 				    Axios.ajax({
 	                    url:'/menu/update/',
@@ -66,17 +73,19 @@ class Menulist extends Component{
 	                        'menuName':values.menuNameModal,
 	                        'menuUrl':values.menuUrlModal,
 	                        'sort':values.sortModal,
-                            'className':values.classNameModal
+                            'className':values.classNameModal,
+                            'remark':values.remarkModal
 	                        
 	                        }
 	                }).then((res)=>{
+	                    _this.setState({loadinge:false})
 	                    if(res.code === 200){
 	                        message.success(res.message);
 	                        values['refresh']=Math.random();
-	                        this.setState({ 
+	                        _this.setState({ 
 	                            modalShow:false,formValue:values
 	                        })
-	                        this.modalformRef.props.form.resetFields();
+	                        _this.modalformRef.props.form.resetFields();
 	                    }else{
 	                        message.error(res.message);
 	                    }
@@ -103,7 +112,8 @@ class Menulist extends Component{
                     menuNameModal:res.data.data.menuName,
                     menuUrlModal:res.data.data.menuUrl,
                     sortModal:res.data.data.sort,
-                    classNameModal:res.data.data.className
+                    classNameModal:res.data.data.className,
+                    remarkModal:res.data.data.remark
                 });
                 
             }else{
@@ -135,6 +145,7 @@ class Menulist extends Component{
 		          title={this.state.modalTitle}
 		          visible={this.state.modalShow}
 		          closable={false}
+				  confirmLoading={this.state.loadinge}   
 		          onCancel={this.setModalVisible.bind(this,false,"")}
 		          onOk={this.handleAddList}
 		        >
@@ -204,6 +215,12 @@ class ModalForm extends Component{
                       <Input type="text"  placeholder="请输入图标名称" style={{width:200}} />
                     )}
                 </FormItem>
+                <FormItem label="备注" {...formItemLayout}>
+                    {getFieldDecorator('remarkModal')(
+                       <TextArea   autosize={{minRows:2}} style={{width:200}} />
+                    )}
+                </FormItem>
+                
 			</Form>
 		)
 	}

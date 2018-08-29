@@ -23,7 +23,7 @@ export default class Axios {
 					token
 				}
 			}).then((response)=>{
-				//console.log(response)
+				console.log(response)
 				if(response.status === 200){//http返回的200
 					let res = response.data;
 					if(res.code === 200){//code是501的时候请求超时
@@ -38,7 +38,7 @@ export default class Axios {
 						    },
 						})
 					}else{
-						message.warning(res.message);
+					    resolve(response.data);
 					}
 				}else{
 					Utils.logOut();
